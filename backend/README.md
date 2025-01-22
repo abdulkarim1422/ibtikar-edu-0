@@ -8,7 +8,7 @@ To run this project, follow these steps:
 git clone https://github.com/abdulkarim1422/ibtikar-edu-0
 ```
 ```bash
-cd ibtikar-edu-0
+cd ibtikar-edu-0/backend
 ```
 
 ### Create and activate virtual environment
@@ -32,9 +32,11 @@ pip install -r requirements.txt
 
 
 ### Migrate db
+#### Initial Migration
 ```bash
 alembic revision --autogenerate -m "Initial migration"
 ```
+#### Upgrading head
 ```bash
 alembic upgrade head
 ```
