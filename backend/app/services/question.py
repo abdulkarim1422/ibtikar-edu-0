@@ -1,14 +1,9 @@
 from app.initializers import temp_data
-from backend.app.services.LLM import unicall_llm
+from app.services.LLM import unicall_llm
 import random
 import json
 
-max_grade = 1
-completed_subjects = []
-completed_questions = []
-false_questions = []
-
-def run_next_question(llm_type="gemini"):
+def run_next_question(llm_type="gemini", student_grade="1", subject=None, subject_topics=[], completed_questions=[], false_questions=[]):
     user_prompt = f"""
     Sınıf: {student_grade}. Sınıf
     Ders: {subject}
@@ -44,7 +39,13 @@ def run_next_question(llm_type="gemini"):
         print(f"True Answer: {q[q["doğru seçenek"]]}\n", correction)
         return False
     
-if __name__ == "__main__":
+def zero_exam_loop():
+    
+    max_grade = 1
+    completed_subjects = []
+    completed_questions = []
+    false_questions = []
+
     while True:
         available_subjects = []
         for key in temp_data.all_all:
@@ -55,7 +56,7 @@ if __name__ == "__main__":
         print("available_subjects:", available_subjects)
         student_grade, subject = random.choice(available_subjects)
         subject_topics = temp_data.all_all[str(student_grade)][subject]
-        test = run_next_question()
+        test = run_next_question(llm_type="gemini", student_grade=student_grade, subject=subject, subject_topics=subject_topics, completed_questions=completed_questions, false_questions=false_questions)
         if test == True:
             print("Doğru")
             if int(student_grade) >= max_grade and max_grade <= 12:
