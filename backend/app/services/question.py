@@ -1,5 +1,5 @@
 from app.initializers import temp_data
-from backend.app.services import gpt_service
+from backend.app.services.LLM import unicall_llm
 import random
 import json
 
@@ -8,7 +8,7 @@ completed_subjects = []
 completed_questions = []
 false_questions = []
 
-def run_next_question():
+def run_next_question(llm_type="gemini"):
     user_prompt = f"""
     Sınıf: {student_grade}. Sınıf
     Ders: {subject}
@@ -16,7 +16,7 @@ def run_next_question():
     """
     print("Sınıf: ", student_grade)
     print("Ders: ", subject)
-    q = gpt_service.call_gpt_basic(temp_data.system_prompt, user_prompt)
+    q = unicall_llm.unicall(llm_type=llm_type, system_prompt=temp_data.system_prompt, user_prompt=user_prompt)
     print(q)
     q = q.replace("json", "")
     q = q.replace("```", "")
@@ -39,12 +39,11 @@ def run_next_question():
         completed_questions.append([student_grade, subject, q])
         return True
     else:
-        correction = gpt_service.call_gpt_basic(f"in the following question, the student answered {student_input}, correct it and explain", q)
+        correction = unicall_llm.unicall(llm_type=llm_type, system_prompt=f"in the following question, the student answered {student_input}, correct it and explain", user_prompt=q)
         false_questions.append([student_grade, subject, (q["soru"], q[q["doğru seçenek"]], f"your answer was: {q[student_input.upper()]}"), correction])
         print(f"True Answer: {q[q["doğru seçenek"]]}\n", correction)
         return False
     
-
 if __name__ == "__main__":
     while True:
         available_subjects = []
