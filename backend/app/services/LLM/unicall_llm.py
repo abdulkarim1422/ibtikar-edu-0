@@ -1,5 +1,5 @@
 from app.services.LLM import gpt_service
-from backend.app.services.LLM import gemini_service
+from app.services.LLM import gemini_service
 
 def unicall(llm_type="gemini", system_prompt="", user_prompt=""):
     if llm_type == "gpt":
