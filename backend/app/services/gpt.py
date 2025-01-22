@@ -15,3 +15,6 @@ def call_gpt_basic(system, user):
   )
 
   return completion.choices[0].message.content
+
+if __name__=="__main__":
+  print(call_gpt_basic("write a summary of the article linked by user", "https://arxiv.org/abs/2308.10383"))
